@@ -8,11 +8,9 @@
  * Question:    Q7
  *
  * 
+ * 
  * File name: scheduler.cpp
  *********************************************/
- 
- //For assignment instructions the executable of the file is './scheduler'
- 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,13 +32,11 @@ using namespace std;
 queue<int> readyQueue;
 int numberOfProcess = 0;
 int totalBurstTime = 0;   // total CPU running time
-int statusCounter;		  
-int tQuantum;
+int statusCounter;
+int timeQuantum;
 int currentProcess = -1;    // the process is running
 int countWait[MAX_PROCESSES];
 int processTable [MAX_PROCESSES][2];   // 2D-array for the process table
-
-//Initialize all possible processes statuses as empty/non-present
 char status[MAX_PROCESSES] = {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '};
 
 // The function readFile opens the give file and read it's data
@@ -51,9 +47,8 @@ char status[MAX_PROCESSES] = {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' 
 
 int readFile(int* processT, char* ar, int* coun){
   ifstream read;   // declare an input file stream
-  read.open(ar);   // open the file stream using the given file name
-  
-  
+  read.open(ar);   // open the file stream with vy using the given file name
+  // Check that the file was opened
   if(!read){    // if the file doesn't exist, Print the error message and exit execution
     cout << "File not found " << ar << endl;
     exit(-1);
@@ -65,11 +60,11 @@ int readFile(int* processT, char* ar, int* coun){
     *(processT + index) = next;    // insert the read result into the array
     index++;
     if(index%2 == 0){   // if the pointer has reached the end of the line,...
-      *coun = *coun + next;   // calculate the total CPU running time by adding the last result in each line(burst time)
-      numberOfProcess++;	  // increases the counter for the number of processes that will be runned
+      *coun = *coun + next;   // calculate the total CPU running tiime by adding the last result in each line(burst time)
+      numberOfProcess++;
     }
   }
-  read.close();   // close the input stream
+  reading.close();   // close the input stream
   return numberOfProcess;
 }
 
@@ -114,28 +109,23 @@ void printEnd(){
 int main(int argc, char *argv[]){
   // handles command line arguments
   if(argc != 4 && argc != 3){
-    fprintf(stderr, "<<Program only accepts 3 arguments>> \nUsage: ./scheduler <config_file> <'SJF' or 'RR'> <time_quantum 'in case of RR'>\n");
+    fprintf(stderr, "**Only 3 arguments are accepted**\nUsage: ./<file_name> <configuration_file> <'RR' or 'SJF'> <time_quantum>\n");
     exit(-1);
-  }
-  else if(strcmp(argv[2], "SJF") != 0 && strcmp(argv[2], "RR") != 0){
-    fprintf(stderr, "<<Please enter 'RR' or 'SJF'>> \n\n");
+  }else if(strcmp(argv[2], "SJF") != 0 && strcmp(argv[2], "RR") != 0){
+    fprintf(stderr, "**Please enter 'RR' or 'SJF'**\n");
     exit(-1);
-  }
-  else if(strcmp(argv[2], "RR") == 0 && argc == 3){
-    fprintf(stderr, "<<RR has no quantum input>> \n\n");
+  }else if(strcmp(argv[2], "SJF") == 0 && argc == 4){
+    fprintf(stderr, "**SJF has no quantum input**\n");
     exit(-1);
-  }
-  else if(strcmp(argv[2], "SJF") == 0 && argc == 4){
-    fprintf(stderr, "<<SJF requires no quantum input>> \n\n");
+  }else if(strcmp(argv[2], "RR") == 0 && argc == 3){
+    fprintf(stderr, "**RR needs quantum input**\n");
     exit(-1);
-  }
-  // Round-Robin Algorithm
-  else if(strcmp(argv[2], "RR") == 0){   
-    tQuantum = stoi(argv[3]);    
-    int timeCounter = tQuantum;    // assign the time quantum to a temporal variable
+  }else if(strcmp(argv[2], "RR") == 0){   // Round-Robin
+    timeQuantum = stoi(argv[3]);    
+    int timeCounter = timeQuantum;    // assign the time quantum to a temp variable
     numberOfProcess = readFile((int *)processTable, argv[1], &totalBurstTime);    // read the file
     printHeader(numberOfProcess);   //print out the graph's header
-    for(int i = 0; totalBurstTime > 0; i++){    // for loop that analizes the processes
+    for(int i = 0; totalBurstTime > 0; i++){    // for loop for analying the processes
         while(statusCounter < numberOfProcess){
             if(processTable[statusCounter][0] == i){    // if found a process arrived, record it and push the process to the ready queue
                 readyQueue.push(statusCounter);
@@ -149,65 +139,58 @@ int main(int argc, char *argv[]){
         if(currentProcess == -1){
             if(readyQueue.size()==0){   // when where is no processes in the running state, print
                 printBody(i);
-            }
-            else{    // if the there is process ready, pop it from the queue and put it in running state
+            }else{    // if the there is process ready, pop it from the queue and put it in running state
                 currentProcess = readyQueue.front();
                 readyQueue.pop();
-                timeCounter = tQuantum;
+                timeCounter = timeQuantum;
                 processTable[currentProcess][1]--;
                 status[currentProcess] = '.';
                 timeCounter--;
             }
-        } 
-        else {
+        } else {
             // when there is running process
-            if(timeCounter == 0){   // when the time slice finishes
+            if(timeCounter == 0){   // when the time slice finsih
                 if(processTable[currentProcess][1] == 0){
                     status[currentProcess] = ' ';
                     currentProcess = -1;
                     if(readyQueue.size() == 0){   // when where is no processes in the running state, print
                         printBody(i);
-                    }
-                    else {   // if the there is process ready, pop it from the queue and put it in running state
+                    }else {   // if the there is process ready, pop it from the queue and put it in running state
                         currentProcess = readyQueue.front();
                         readyQueue.pop();
-                        timeCounter = tQuantum;
+                        timeCounter = timeQuantum;
                         processTable[currentProcess][1]--;
                         status[currentProcess] = '.';
                         timeCounter--;
                     }
-                }
-                else{	// Same as previous operation except there is an existing process
+                }else{
                     status[currentProcess] = '+';
                     readyQueue.push(currentProcess);
+                    // Same as previous operation except since there is an existing process
                     currentProcess = readyQueue.front();
                     readyQueue.pop();
-                    timeCounter = tQuantum;
+                    timeCounter = timeQuantum;
                     processTable[currentProcess][1]--;
                     status[currentProcess] = '.';
                     timeCounter--;
                 }
-            }
-            else{    // when the time slice is not finish
+            }else{    // when the time slice is not finish
                 if(processTable[currentProcess][1] == 0){
                     status[currentProcess] = ' ';
                     currentProcess = -1;
-                    if(readyQueue.size()==0){   // when where is no processes in the running state, print body
+                    if(readyQueue.size()==0){   // when where is no processes in the running state, print
                         printBody(i);
-                    }
-                    else {
+                    }else {
                         // if the there is process ready, pop it from the queue and put it in running state
                         currentProcess = readyQueue.front();
                         readyQueue.pop();
-                        timeCounter = tQuantum;
+                        timeCounter = timeQuantum;
                         processTable[currentProcess][1]--;
                         status[currentProcess] = '.';
                         timeCounter--;
                     }
-                
-                }
-                else{
-					// subcase in whcih the process is not finished
+                // subcase not finish
+                }else{
                     processTable[currentProcess][1]--;
                     timeCounter--;
                 }
@@ -218,10 +201,8 @@ int main(int argc, char *argv[]){
     }
     // After the main body, prints the waited time for each process and calculate the average wait time
     printEnd();
-  }
-  
-  // Shortest-job-first ALgorithm
-  else if(strcmp(argv[2], "SJF") == 0){
+  // Shortest-job-first
+  }else if(strcmp(argv[2], "SJF") == 0){
     numberOfProcess = readFile((int *)processTable, argv[1], &totalBurstTime);    // read the file
     printf("Process#: %d, Total burst: %d\n", numberOfProcess, totalBurstTime);
     printHeader(numberOfProcess);   //print out the graph's header
@@ -229,8 +210,7 @@ int main(int argc, char *argv[]){
         while(statusCounter < numberOfProcess){
             if(processTable[statusCounter][0] == i){    // if found a process arrived, record it
                 status[statusCounter] = '+';
-            }
-            else if(processTable[statusCounter][0] > i){
+            }else if(processTable[statusCounter][0] > i){
               break;
             }
             statusCounter++;
@@ -241,8 +221,7 @@ int main(int argc, char *argv[]){
             for(int i = 0 ; i < statusCounter; i++){
                 if(min == -1 && status[i] == '+'){
                   min = i;    // if no process is found, then set the readyed process to be the first process
-                }
-                else if(processTable[i][1] < processTable[min][1] && status[i] == '+'){
+                }else if(processTable[i][1] < processTable[min][1] && status[i] == '+'){
                   min = i;    // if the there is processes arrived earlier then the recorded process and it is readyed,the nset that process to be the first process
                 }
             }
@@ -251,8 +230,7 @@ int main(int argc, char *argv[]){
                 status[currentProcess] = '.';
                 processTable[currentProcess][1]--;
             }
-        }
-        else if(processTable[currentProcess][1] == 0){   // the case when the process is finished
+        }else if(processTable[currentProcess][1] == 0){   // the case when the process is finished
             status[currentProcess] = ' ';
             currentProcess = -1;
             int min = -1;
@@ -268,8 +246,7 @@ int main(int argc, char *argv[]){
                 status[currentProcess] = '.';
                 processTable[currentProcess][1]--;
             }
-        }
-        else{
+        }else{
             processTable[currentProcess][1]--;
         }
         // after the time i, prints te result in the graph body
