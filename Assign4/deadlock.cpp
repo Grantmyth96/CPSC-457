@@ -1,3 +1,15 @@
+/*
+ * deadlock.cpp
+ *
+ * Student Name: Juan Luis de Reiset
+ * Student Number: 30050167
+ *
+ * Class: CPSC 457 Spring 2017
+ * Instructor: Pavol Federl
+ *
+ * Copyright 2017 University of Calgary. All rights reserved.
+ */
+
 /*Program structure
  * 
  * loop:
