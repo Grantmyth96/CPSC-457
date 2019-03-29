@@ -211,9 +211,16 @@ int main(int argc, char * const argv[]){
 					
 					//execute find cycle
 					if(g.isCyclic()) {
+						
 						cout << "Deadlocked processes: "; 
-						size_t n= sizeof(dlproc)/sizeof(dlproc[0]);
-						for(size_t i = 0; i<n; i++){
+						
+						int n = sizeof(dlproc)/sizeof(dlproc[0]);  // s isused for traversing
+																   //array when sorting and printing
+																   
+						sort(dlproc, dlproc+n); 					// sorts deadlocked processes array
+																    // in ascending order
+						//prints array of deadlock processes										    
+						for(int i = 0; i<n; i++){
 							if(dlproc[i]<9999)
 								std::cout <<dlproc[i] << " ";
 						}
@@ -248,18 +255,19 @@ int main(int argc, char * const argv[]){
 					else if((v1 > v2) && (v1> g.getVertex())){
 						g.addVertex(v1);
 					}
-					
+					// Registers N -> M (N makes a request for M)
 					if(operation=="->"){
 						//printf("operation is -> \n");
 						g.addEdge(v1, v2);
 						//cout << v1 << " requests resources from " << v2 <<" \n";
 					}
+					// Registers N <-  (N holds the resource M)
 					else if(operation=="<-"){
 						//printf("operation is <- \n");
 						g.addEdge(v2, v1);
 						//cout << v1 << " holds resources from " << v2 <<" \n";
 					}
-				
+				//Clear iss for allowing saving new values in the next loop iteration
 					iss.clear();
 					
 					 ///////add edge to array//////////////////////////
