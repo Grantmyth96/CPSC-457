@@ -36,8 +36,8 @@
   
 using namespace std; 
 
-#define MAX_INPUTS 100000
-#define MAX_DPROC  100
+#define MAX_INPUTS 10000000
+#define MAX_DPROC  10000
 
 int dlproc[MAX_DPROC]; //array that contains all deadlocked processes
 int countdl=0;		   // index for dlproc
@@ -66,7 +66,7 @@ class Graph
 		 
 		 //reset deadlock array
 		 for(int i=0;i<MAX_DPROC;i++){
-			dlproc[i]=10000;
+			dlproc[i]=1000000;
 		}
 	} 
   
@@ -184,16 +184,19 @@ int main(int argc, char * const argv[]){
 					
 					//execute find cycle
 					if(g.isCyclic()) {
+						
+						
 						cout << "Deadlocked processes: "; 
 						size_t n= sizeof(dlproc)/sizeof(dlproc[0]);
+						sort(dlproc, dlproc+n); 
 						for(size_t i = 0; i<n; i++){
-							if(dlproc[i]<9999)
+							if(dlproc[i]<1000000)
 								std::cout <<dlproc[i] << " ";
 						}
 						cout<<"\n";
 						 //reset deadock array
-						for(int i=0;i<MAX_DPROC;i++){
-							dlproc[i]=10000;
+						for(int i=0;i<countdl;i++){
+							dlproc[i]=1000000;
 						}
 					}
 					else{
@@ -220,8 +223,8 @@ int main(int argc, char * const argv[]){
 						sort(dlproc, dlproc+n); 					// sorts deadlocked processes array
 																    // in ascending order
 						//prints array of deadlock processes										    
-						for(int i = 0; i<n; i++){
-							if(dlproc[i]<9999)
+						for(int i = 0; i<countdl; i++){
+							if(dlproc[i]<1000000)
 								std::cout <<dlproc[i] << " ";
 						}
 						cout<<"\n"; 
@@ -246,7 +249,7 @@ int main(int argc, char * const argv[]){
 					
 					iss >> v1 >> operation >> v2; //save values found in line separated by " "
 					
-					v2=v2+(10000); //Label resources so that they can be identified in adyancy array
+					v2=v2+(1000000); //Label resources so that they can be identified in adyancy array
 								 // Used to differentiate resources from processes 
 					
 					if((v2 > v1) && (v2> g.getVertex())){
