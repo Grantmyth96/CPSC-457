@@ -1,0 +1,4 @@
+easy 7
+medium 19
+ hard 5
+ hard2 4
