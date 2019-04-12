@@ -1,18 +1,28 @@
-// CPSC457 University of Calgary
-// Skeleton C++ program for Q7 of Assignment 5.
+// CPSC457 Winter 2018, University of Calgary
+// C++ program for Q7 of Assignment 5.
 //
-// The program reads in the input, then calls the (wrongly implemented) checkConsistency()
-// function, and finally formats the output.
+// The program reads in the input, then calls the checkConsistency() to 
+// check if each file has proper amount of blocks, too many blocks, or too
+// few blocks allocated to it the FAT, if it contains a cycle, and if the file
+// shares blocks with any other files. It also reports the number of free blocks
+// at the end, and finally formats the output.
 //
-// You only need to reimplement the checkConsistency() function.
+// Author: Lamess Kharfan 
+// Date: April 6, 2018
+// Student ID: 10150607
+// Tutorial: T02
+// Version: 1
 //
-// Author: Pavol Federl (pfederl@ucalgary.ca or federl@gmail.com)
-// Date: April 1, 2019
-// Version: 5
+// Compile with g++ -std=c++11 impl.cpp -o impl
+// Run with ./impl < filename.txt (a properly formatted input file)
 
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <set>
+
+using namespace std;
 
 typedef std::string SS;
 typedef std::vector<SS> VS;
@@ -21,10 +31,10 @@ struct DEntry {
     SS fname = SS( 4096, 0);
     int size = 0;
     int ind = 0;
-    bool tooManyBlocks = true;
+    bool tooManyBlocks = false;
     bool tooFewBlocks = false;
-    bool hasCycle = true;
-    bool sharesBlocks = true;
+    bool hasCycle = false;
+    bool sharesBlocks = false;
 };
 
 static SS join( const VS & toks, const SS & sep) {
@@ -34,8 +44,6 @@ static SS join( const VS & toks, const SS & sep) {
     return res;
 }
 
-// re-implement this function
-//
 // Parameters:
 //   blockSize - contains block size as read in from input
 //   files - array containing the entries as read in from input
@@ -46,7 +54,7 @@ static SS join( const VS & toks, const SS & sep) {
 //      i.e. tooManyBlocks, tooFewBlocks, hasCycle and sharesBlocks
 int checkConsistency( int blockSize, std::vector<DEntry> & files, std::vector<int> & fat)
 {
-   vector<int> blocks;
+	vector<int> blocks;
 	//Check how many blocks each file needs and store in blocks
 	for (int i = 0; i < files.size(); i++)
 	{
@@ -124,7 +132,6 @@ int checkConsistency( int blockSize, std::vector<DEntry> & files, std::vector<in
 	freeBlocks -= indexes.size();
     return freeBlocks;
 }
-
 int main()
 {
     try {
@@ -155,10 +162,7 @@ int main()
             if( fat[i] < -1 || fat[i] >= fatSize) throw "bad FAT entry";
         }
 
-        // run the consistency check
         int nFreeBlocks = checkConsistency( blockSize, entries, fat);
-
-        // format the output
         size_t maxflen = 0;
         for( auto & e : entries ) maxflen = std::max( maxflen, e.fname.size());
         SS fmt = "  %" + std::to_string( maxflen) + "s: %s\n";
@@ -173,6 +177,7 @@ int main()
             printf( fmt.c_str(), e.fname.c_str(), join( issues, ", ").c_str());
         }
         printf( "Number of free blocks: %d\n", nFreeBlocks);
+
     }
     catch( const char * err) {
         fprintf( stderr, "Error: %s\n", err);
