@@ -1,3 +1,18 @@
+//*********************************************************************
+// CPSC457 Winter 2019, University of Calgary
+// C++ program for Q6 of Assignment 5.
+//
+//
+//
+// Author: Juan Luis de Reiset Jimenez-Carbo 
+// Student ID: 30050167
+// Tutorial: T01
+// Version: 1
+//
+// Compile with g++ pagesim.cpp -o pagesim
+// Run with ./pagesim < "filename.txt" 
+//******************************************************************************
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -10,7 +25,7 @@ using namespace std;
 vector<int> ref_string;
 int na_frames;
 //----------------------------------OPTIMAL ALGORITHM---------------------------
-void optimal() {
+void OPTIMAL() {
   unordered_map<int, int> frame_count;
   int page_faults = 0;
   int frame [na_frames];
@@ -91,7 +106,7 @@ void optimal() {
 }
 
 //--------------------------------LRU ALGORITHM--------------------------------
-void lru() {
+void LRU() {
   unordered_map<int, int> frame_count;
   int page_faults = 0;
   int frame [na_frames];
@@ -173,7 +188,7 @@ void lru() {
 }
 
 //---------------------------------CLOCK ALGORITHM-----------------------------
-void clock_alg() {
+void CLOCK_algo() {
   int page_faults = 0;
   int frame [na_frames];
   int clock_int[na_frames];
@@ -270,10 +285,10 @@ int main (int argc, char * const argv[]) {
     }
   }
   cout<<"Optimal:"<<endl;
-  optimal();
+  OPTIMAL();
   cout<<"LRU:"<<endl;
-  lru();
+  LRU();
   cout<<"Clock:"<<endl;
-  clock_alg();
+  CLOCK_algo();
 
 }

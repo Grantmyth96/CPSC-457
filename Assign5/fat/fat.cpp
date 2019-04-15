@@ -2,12 +2,14 @@
 // CPSC457 Winter 2019, University of Calgary
 // C++ program for Q7 of Assignment 5.
 //
-// The program reads in the input, then calls the checkConsistency() to 
-// check if each file has proper amount of blocks, too many blocks, or too
+// The program reads in the input, then calls 
+// the checkConsistency() to check
+// if each file has proper amount, too many, or too
 // few blocks allocated to it the FAT.
 //
 // if it contains a cycle, and if the file
-// shares blocks with any other files. It also reports the number of free blocks
+// shares blocks with any other files. 
+// It also reports the number of free blocks
 // at the end, and finally formats the output.
 //
 // Author of main program: Pavol Federl
