@@ -1,3 +1,18 @@
+//*********************************************************************
+// CPSC457 Winter 2019, University of Calgary
+// C++ program for Q6 of Assignment 5.
+//
+//
+//
+// Author: Juan Luis de Reiset Jimenez-Carbo 
+// Student ID: 30050167
+// Tutorial: T01
+// Version: 1
+//
+// Compile with g++ pagesim.cpp -o pagesim
+// Run with ./pagesim < "filename.txt" 
+//******************************************************************************
+
 #include <string>
 #include <iostream>
 #include <fstream>
